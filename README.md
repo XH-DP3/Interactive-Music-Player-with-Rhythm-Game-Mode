@@ -1,6 +1,6 @@
-# My Personal Project
+# Rhythm Challenge: Press Your Keys!
 
-## A subtitle
+## Feel the music, Feel the Rhythm
 
 A *bulleted* list:
 - item 1
