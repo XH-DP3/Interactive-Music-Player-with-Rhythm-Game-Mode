@@ -80,8 +80,20 @@ public class Song {
         // stub
     }
 
+    // EFFECTS; if the song is playing, return true. Otherwise, return false.
+    public boolean getPlayingStatus() {
+        // stub
+        return false;
+    }
+
     // EFFECTS: marked this song as favorite.
     public void markedAsFavorite() {
         // stub
+    }
+
+    // EFFECTS: return if my song is marked as favorite
+    public boolean isFavorite() {
+        // stub
+        return false;
     }
 }
