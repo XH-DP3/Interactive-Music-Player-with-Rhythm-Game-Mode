@@ -2,15 +2,15 @@ package model;
 
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
 import java.io.*;
 import java.util.*;
 
 public class TestSong {
     private Song mySong;
 
-    @BeforeEach
+    @Before
     public void setup() {
         mySong = new Song("Patience", "Take That", "Pop", 202);
     }
@@ -38,6 +38,13 @@ public class TestSong {
     }
 
     @Test
+    public void testSetInvalidDuration() {
+        assertEquals(202, mySong.getDuration());
+        mySong.setDuration(-10);
+        assertEquals(202, mySong.getDuration());
+    }
+
+    @Test
     public void testSetDuration() {
         assertEquals(202, mySong.getDuration());
         mySong.setDuration(60);
@@ -46,18 +53,26 @@ public class TestSong {
 
     @Test
     public void testReadEmptyLyricsFile() {
-        File f = new File("/Users/huangxinghao/Downloads/TestReadEmptyLyrics");
-        assertTrue(mySong.readLyrics(f));
+        File f = new File("/Users/huangxinghao/Downloads/TestReadEmptyLyrics.txt");
+        try {
+            mySong.readLyrics(f);
+        } catch (IOException e) {
+            // stub
+        }
         List<String> myLyrics = mySong.getLyrics();
         assertEquals(0, myLyrics.size());
     }
 
     @Test
     public void testReadLyricsFile() {
-        File f = new File("/Users/huangxinghao/Downloads/TestReadLyrics");
-        assertTrue(mySong.readLyrics(f));
+        File f = new File("/Users/huangxinghao/Downloads/TestReadLyrics.txt");
+        try {
+            mySong.readLyrics(f);
+        } catch (IOException e) {
+            // stub
+        }
         List<String> myLyrics = mySong.getLyrics();
-        assertEquals(6, myLyrics.size());   //I wrote 6 lines in the file
+        assertEquals(6, myLyrics.size()); // I wrote 6 lines in the file
     }
 
     @Test
