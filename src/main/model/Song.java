@@ -3,7 +3,7 @@ package model;
 import java.io.*;
 import java.util.*;
 
-//Represents a song track with a title, author name, genre, duration, lyrics.
+// Represents a song track with a title, author name, genre, duration, lyrics, playing status, and favorite status.
 public class Song {
     private String title;
     private String author;
@@ -60,22 +60,19 @@ public class Song {
         }
     }
 
-    // REQUIRES: lyricsFile exists
     // MODIFIES: this
     // EFFECTS: reading the lyrics of this song. If the lyrics have been
     // successfully read, return true. Otherwise, return false.
-    public boolean readLyrics(File lyricsFile) throws IOException {
-        BufferedReader in = null;
-        if (lyricsFile.exists()) {
-            in = new BufferedReader(new FileReader(lyricsFile));
+    public void readLyrics(File lyricsFile) throws FileNotFoundException, IOException {
+        if (!lyricsFile.exists()) {
+            throw new FileNotFoundException();
+        }
+        BufferedReader in = new BufferedReader(new FileReader(lyricsFile));
             String s;
             while ((s = in.readLine()) != null) {
                 lyrics.add(s);
             }
             in.close();
-            return true;
-        }
-        return false;
     }
 
     // EFFECTS: return the lyrics as a list. If the list is empty, return null.

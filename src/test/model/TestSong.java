@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.*;
-import java.util.*;
 
 public class TestSong {
     private Song mySong;
@@ -56,23 +55,38 @@ public class TestSong {
         File f = new File("src/test/model/TestReadEmptyLyrics.txt");
         try {
             mySong.readLyrics(f);
+        assertEquals(0, mySong.getLyrics().size());
+        } catch (FileNotFoundException e) {
+            fail("Got FileNotFoundException when we shouldn't have!");
         } catch (IOException e) {
-            e.printStackTrace();
+            fail("Got IOException when we shouldn't have!");
         }
-        List<String> myLyrics = mySong.getLyrics();
-        assertEquals(0, myLyrics.size());
     }
 
     @Test
     public void testReadLyricsFile() {
+        File f = new File("src/test/model/Unknown.txt");
+        try {
+            mySong.readLyrics(f);
+            fail ("Got no exception when we should have FileNotFoundException");
+        } catch (FileNotFoundException e) {
+            // expecting FileNotFoundException to be catught
+        } catch (IOException e) {  
+            fail ("Got IOException when we shoudn't have!");
+        }
+    }
+
+    @Test
+    public void testReadLyricsWhenFileIsNotFound() {
         File f = new File("src/test/model/TestReadLyrics.txt");
         try {
             mySong.readLyrics(f);
+            assertEquals(6, mySong.getLyrics().size());
+        } catch (FileNotFoundException e) {
+            fail ("Got FileNotFoundException when we shouldn't have!");
         } catch (IOException e) {
-            e.printStackTrace();
+            fail("Got IOException when we shouldn't have!");
         }
-        List<String> myLyrics = mySong.getLyrics();
-        assertEquals(6, myLyrics.size());
     }
 
     @Test

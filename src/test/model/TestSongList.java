@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class TestSongList {
-    
+
     private SongList list;
     private Song s1;
     private Song s2;
@@ -32,13 +32,19 @@ public class TestSongList {
 
     @Test
     public void testFindSongByTitleNotFound() {
+        list.addSong(s1);
+        list.addSong(s2);
+        list.addSong(s3);
         String title = "Best Song Ever";
         assertNull(list.findSongByTitle(title));
     }
 
     @Test
     public void testFindSongByTitleFound() {
-        String title = "Payphone";
+        list.addSong(s1);
+        list.addSong(s2);
+        list.addSong(s3);
+        String title = s1.getTitle();
         assertEquals(s1.getTitle(), list.findSongByTitle(title).getTitle());
     }
 
@@ -50,6 +56,9 @@ public class TestSongList {
 
     @Test
     public void testFindByAuthorOneSongFound() {
+        list.addSong(s1);
+        list.addSong(s2);
+        list.addSong(s3);
         String author = "Maroon 5";
         List<Song> l = list.findSongByAuthor(author);
         assertEquals(1, l.size());
@@ -58,6 +67,9 @@ public class TestSongList {
 
     @Test
     public void testFindByAuthorMultipleSongsFound() {
+        list.addSong(s1);
+        list.addSong(s2);
+        list.addSong(s3);
         String author = "Avril Lavigne";
         List<Song> l = list.findSongByAuthor(author);
         assertEquals(2, l.size());
@@ -87,10 +99,23 @@ public class TestSongList {
 
     @Test
     public void testAddExtraSongWithIndex() {
-        testAddExtraSongWithIndex();
+        list.addSong(s1);
+        list.addSong(s2);
+        list.addSong(s3);
         Song s4 = new Song("Whataya Want from me", "Adam Lambert", "Pop", 227);
-        assertTrue(list.addSong(s4, 1));
+        assertTrue(list.addSong(1, s4));
         assertEquals(s4, list.getSongList().get(1));
+    }
+
+    @Test
+    public void testAddSongWithInvalidInput() {
+        assertFalse(list.addSong(-1, s1));
+        assertFalse(list.addSong(10, s1));
+        assertEquals(0, list.getSize());
+        assertTrue(list.addSong(s1));
+        assertFalse(list.addSong(s1));
+        assertFalse(list.addSong(0, s1));
+
     }
 
     @Test
@@ -123,6 +148,15 @@ public class TestSongList {
     }
 
     @Test
+    public void testDeleteSongWithInvalidIndex() {
+        assertTrue(list.addSong(s1));
+        assertFalse(list.deleteSong(-1));
+        assertFalse(list.deleteSong(10));
+        assertEquals(1, list.getSize());
+        ;
+    }
+
+    @Test
     public void testReset() {
         assertTrue(list.addSong(s1));
         assertTrue(list.addSong(s2));
@@ -133,26 +167,39 @@ public class TestSongList {
     }
 
     @Test
-    public void setSortByDurationStarLowest() {
+    public void testSortByLowestDuration() {
         assertTrue(list.addSong(s1));
         assertTrue(list.addSong(s2));
         assertTrue(list.addSong(s3));
-        list.sortByDuration(true);
+        list.sortByLowestDuration();
         List<Song> sortedList = list.getSongList();
         assertEquals(s2, sortedList.get(0));
         assertEquals(s1, sortedList.get(1));
-        assertEquals(s3, sortedList.get(3));
+        assertEquals(s3, sortedList.get(2));
     }
 
     @Test
-    public void setSortByDurationStarHighest() {
+    public void testSortByLowestDurationWithInvalidSize() {
+        list.sortByLowestDuration();
+        assertEquals(0, list.getSize());
+    }
+
+    @Test
+    public void testSortByhighestDuration() {
         assertTrue(list.addSong(s1));
         assertTrue(list.addSong(s2));
         assertTrue(list.addSong(s3));
-        list.sortByDuration(false);
+        list.sortByHighestDuration();
         List<Song> sortedList = list.getSongList();
         assertEquals(s3, sortedList.get(0));
         assertEquals(s1, sortedList.get(1));
-        assertEquals(s2, sortedList.get(3));
+        assertEquals(s2, sortedList.get(2));
     }
+
+    @Test
+    public void testSortByHighestDurationWithInvalidSize() {
+        list.sortByHighestDuration();
+        assertEquals(0, list.getSize());
+    }
+
 }
