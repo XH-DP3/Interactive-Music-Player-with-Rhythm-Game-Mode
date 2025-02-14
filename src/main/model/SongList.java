@@ -16,7 +16,7 @@ public class SongList {
     }
 
     // EFFECTS: reuturn this song list
-    public List<String> getSongList() {
+    public List<Song> getSongList() {
         // stub
         return null;
     }
@@ -36,7 +36,7 @@ public class SongList {
     // REQUIRES: (index >= 0 && index < list.size()) && (!songList.contains(mySong))
     // MODIFIES: this
     // EFFECT: add mySong at the specific index to the music list and return true
-    public boolean addMusic(Song mySong, int index) {
+    public boolean addSong(Song mySong, int index) {
         // stub
         return false;
     }
@@ -44,22 +44,22 @@ public class SongList {
     // REQUIRES: !songList.contains(mySong)
     // MODIFIES: this
     // EFFECT: add mySong to the end of the list and return true;
-    public boolean addMusic(Song mySong) {
+    public boolean addSong(Song mySong) {
         return true;
     }
 
     // REQUIRES: index >= 0 && index < list.size()
     // MODIFIES: this
     // EFFECTS: delete the song at the specific index from the music list and return true
-    public boolean deleteMusic(int index) {
+    public boolean deleteSong(int index) {
         // stub
         return false;
     }
 
     // REQUIRES: songList.contains(mySong)
     // MODIFIES: this
-    // EFFECTS: delete the mySong from the list.
-    public boolean deleteMusic(Song mySong) {
+    // EFFECTS: delete the song object with the corresponding title from the list. If the song title is not found, return false.
+    public boolean deleteSong(String songTitle) {
         // stub
         return false;
     }

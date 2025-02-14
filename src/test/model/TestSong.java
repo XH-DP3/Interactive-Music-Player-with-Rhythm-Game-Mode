@@ -53,11 +53,11 @@ public class TestSong {
 
     @Test
     public void testReadEmptyLyricsFile() {
-        File f = new File("/Users/huangxinghao/Downloads/TestReadEmptyLyrics.txt");
+        File f = new File("src/test/model/TestReadEmptyLyrics.txt");
         try {
             mySong.readLyrics(f);
         } catch (IOException e) {
-            // stub
+            e.printStackTrace();
         }
         List<String> myLyrics = mySong.getLyrics();
         assertEquals(0, myLyrics.size());
@@ -65,14 +65,14 @@ public class TestSong {
 
     @Test
     public void testReadLyricsFile() {
-        File f = new File("/Users/huangxinghao/Downloads/TestReadLyrics.txt");
+        File f = new File("src/test/model/TestReadLyrics.txt");
         try {
             mySong.readLyrics(f);
         } catch (IOException e) {
-            // stub
+            e.printStackTrace();
         }
         List<String> myLyrics = mySong.getLyrics();
-        assertEquals(6, myLyrics.size()); // I wrote 6 lines in the file
+        assertEquals(6, myLyrics.size());
     }
 
     @Test

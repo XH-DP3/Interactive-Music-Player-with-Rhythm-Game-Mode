@@ -1,0 +1,6 @@
+This is a file to test readLyrics method.
+It should be able to read each line.
+And each line is in a index of the list.
+As a result,
+for this test file,
+the resulting list should have size = 6.

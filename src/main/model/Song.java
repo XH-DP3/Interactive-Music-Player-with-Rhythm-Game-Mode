@@ -15,7 +15,7 @@ public class Song {
 
     // REQUIRES: duration > 0
     // MODIFIES: this
-    // EFFECTS: Construct a song track with the given title, author name, genre, length
+    // EFFECTS: Construct a song track with the given title, author name, genre,
     // with a empty lyrics list.
     public Song(String title, String author, String genre, int duration) {
         this.title = title;
