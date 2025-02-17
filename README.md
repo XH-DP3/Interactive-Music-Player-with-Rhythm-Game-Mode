@@ -11,7 +11,7 @@ A music rhythm game that provides several built-in music with different levels o
 
 ## User Stories
 
-- As a user, I want to be able to upload an arbitrary number of songs to my favorite list
-- As a user, I want to be able to see my favorite list of songs
-- As a user, I want to be able to view my level and scores of my completed game
+- As a user, I want to be able to upload an arbitrary number of songs to my song list and my favorite song list
+- As a user, I want to be able to see my song list, and my favorite song like
+- As a user, I want to be able to view my scores after ending the game
 - As a user, I want to be able to see the feedback of each key presses
