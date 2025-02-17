@@ -19,6 +19,7 @@ public class MusicRhythmGame {
     FavoriteSongList myFavoriteList;
     Buttons buttons;
 
+    // MODIFIES: this
     // EFFECTS: Intialize the fields and invoke the menu
     public MusicRhythmGame() {
         setup();
