@@ -126,7 +126,6 @@ public class MusicRhythmGame {
             println();
             printSongInfo(getMusicLibrary());
             printm("Please enter the title of the song that you want to play: ");
-            in.nextLine();
             String msg = in.nextLine();
             Song s = getSongList().findSongByTitle(msg);
             if (s != null) {
