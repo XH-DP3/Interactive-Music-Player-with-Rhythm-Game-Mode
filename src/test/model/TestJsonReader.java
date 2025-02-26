@@ -15,7 +15,7 @@ public class TestJsonReader {
     @Test
     public void testOpenWithANotFoundFile() {
         try {
-            writer = new JsonWriter("./data/3g3jcwqfj03f3].json");
+            writer = new JsonWriter("./data/my\0illegal:fileName.json");
             writer.open();
             fail("The test should not pass!");
         } catch (FileNotFoundException e) {
@@ -26,7 +26,7 @@ public class TestJsonReader {
     @Test
     public void testOpenWithAFoundFile() {
         try {
-            writer = new JsonWriter("./data/myFile.json");
+            writer = new JsonWriter("./data/myTestFile.json");
             writer.open();
         } catch (FileNotFoundException e) {
             fail ("FileNotFoundException is not expected!");
@@ -36,7 +36,7 @@ public class TestJsonReader {
     @Test
     public void testWriteEmptySongList() {
         try {
-            writer = new JsonWriter("./data/myFile.json");
+            writer = new JsonWriter("./data/myTestFile.json");
             writer.open();
             SongList mySongList = new SongList();
             assertEquals(0, mySongList.getSize());
@@ -50,7 +50,7 @@ public class TestJsonReader {
     @Test
     public void testWriteSongList() {
         try {
-            writer = new JsonWriter("./data/myFile.json");
+            writer = new JsonWriter("./data/myTestFile.json");
             writer.open();
             SongList mySongList = new SongList();
             Song s1 = new Song("Payphone", "Maroon 5", "Pop", 231);
