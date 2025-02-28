@@ -195,12 +195,35 @@ public class MusicRhythmGame {
         menu();
     }
 
-    // EFFECTS: quit the program
+    // MODIFIES: this
+    // EFFECTS: ask the user if they want to save their music library, song list,
+    // and favorite song list then quit the program
     public void quit() {
         println();
         printm("Program ends. Bye!");
         System.exit(1);
     }
+
+    // EFFECTS: identify which attribute(s) the user want to save
+    public void saveHelper() {
+
+    }
+
+    // EFFECTS: write music library to a json file
+    public void writeMusicLibrary() {
+
+    }
+
+    // EFFECTS: write song list to a json file
+    public void writeSongList() {
+
+    }
+
+    // EFFECTS: write favorite song list to a json file
+    public void writeFavoriteSongList() {
+
+    }
+
 
     // EFFECTS: return the music library
     public SongList getMusicLibrary() {
