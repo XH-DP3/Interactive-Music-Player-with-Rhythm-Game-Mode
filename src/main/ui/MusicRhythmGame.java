@@ -8,6 +8,7 @@ import model.Buttons;
 import model.FavoriteSongList;
 import model.Song;
 import model.SongList;
+import persistence.JsonWriter;
 
 // Represent a music rhythm game application with a general music library,
 // my song list, my favorite song list, and buttons.
@@ -200,30 +201,92 @@ public class MusicRhythmGame {
     // and favorite song list then quit the program
     public void quit() {
         println();
+        printm("Would you like to save your progree? (yes/no)");
+        String s = in.next();
+        if (!s.equals("yes") || !s.equals("no")) {
+            printm("Invalid input, please try again.");
+            quit();
+        } else if (s.equals("no")) {
+            printm("Your progress is not saved.");
+        } else {
+            saveHelper();
+        }
         printm("Program ends. Bye!");
         System.exit(1);
     }
 
     // EFFECTS: identify which attribute(s) the user want to save
     public void saveHelper() {
+        try {
+            println();
+            printm("Please select one of the following:");
+            println();
+            in = new Scanner(System.in);
+            printm("1. Save music library.");
+            printm("2. Save song list");
+            printm("3. Save favorite song list");
+            printm("4. Return to the previous page.");
+            int input = in.nextInt();
+            if (input < 1 || input > 4) {
+                throw new InputMismatchException();
+            }
+            evaluateInputForSave(input);
+        } catch (InputMismatchException e) {
+            println();
+            printm("Invalid input. Please try again.");
+            saveHelper();
+        }
+    }
 
+    // EFFECTS: identify the input from user for the attribute(s) they want to save
+    public void evaluateInputForSave(int input) {
+        if (input == 1) {
+            writeMusicLibrary();
+        } else if (input == 2) {
+            writeSongList();
+        } else if (input == 3) {
+            writeFavoriteSongList();
+        } else {
+            quit();
+        }
     }
 
     // EFFECTS: write music library to a json file
     public void writeMusicLibrary() {
-
+        println();
+        String source = ".data/mdata/musicLibrary.json";
+        JsonWriter writer = new JsonWriter(source);
+        writer.write(musicLibrary);
+        printm("Your music library is saved.");
     }
 
     // EFFECTS: write song list to a json file
     public void writeSongList() {
-
+        println();
+        if (mySongList.getSize() == 0) {
+            printm("Your song list has no songs to save");
+            saveHelper();
+        } else {
+            String source = ".data/mdata/mySongList.json";
+            JsonWriter writer = new JsonWriter(source);
+            writer.write(mySongList);
+            printm("Your song list is saved.");
+        }
     }
 
     // EFFECTS: write favorite song list to a json file
     public void writeFavoriteSongList() {
-
+        println();
+        if (mySongList.getSize() == 0) {
+            printm("Your favorite song list has no songs to save");
+            saveHelper();
+        } else {
+            String source = ".data/mdata/myFavoriteSongList.json";
+            JsonWriter writer = new JsonWriter(source);
+            writer.write(myFavoriteList);
+            printm("Your favorite song list is saved.");
+        }
     }
-
 
     // EFFECTS: return the music library
     public SongList getMusicLibrary() {
