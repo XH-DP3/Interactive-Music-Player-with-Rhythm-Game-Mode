@@ -16,7 +16,6 @@ import persistence.JsonWriter;
 // my song list, my favorite song list, and buttons.
 public class MusicRhythmGame {
     Scanner in;
-    String username;
     SongList musicLibrary;
     SongList mySongList;
     SongList myFavoriteList;
@@ -28,18 +27,12 @@ public class MusicRhythmGame {
         setup();
         printm("Welcome to the game!");
         println();
-        printm("Please enter your username: ");
-        println();
-        username = in.nextLine();
-        println();
-        printm("Hello " + username);
-        menuHelper();
+        menu();
     }
 
     // MODIFIES: this
     // EFFECTS: Initialize the fields.
     public void setup() {
-        in = new Scanner(System.in);
         musicLibrary = new SongList();
         mySongList = new SongList();
         myFavoriteList = new FavoriteSongList();
@@ -66,39 +59,36 @@ public class MusicRhythmGame {
         System.out.println(message);
     }
 
+    // EFFECTS: a helper method that will throw an InputMisMatchException if the
+    // user input is not valid
+    public void checkValidInput(int input, int lowerBound, int upperBound) {
+        if (input < lowerBound || input > upperBound) {
+            throw new InputMismatchException();
+        }
+    }
+
     // MODIFIES: this
     // EFFECTS: printing the menu// EFFECTS: showing the menu panel and receives an
     // input from user about the
     // next command. It will invoke the evaluateInputForMenu() and handle the
     // potential InputMismatchException().
     public void menu() throws InputMismatchException {
-        in = new Scanner(System.in);
-        println();
-        printm("Please select one of the following by entering an integer: ");
-        printm("1. Playing the game");
-        printm("2. Check music library");
-        printm("3. Check your song list");
-        printm("4. Check your favorite song list");
-        printm("5. Quit the program");
-        printm("6. Reload your saved lists");
-        int input = in.nextInt();
-        if (input < 1 || input > 6) {
-            throw new InputMismatchException();
-        }
-        evaluateInputForMenu(input);
-    }
-
-    // EFFECTS: it will call menu and handle the potential InputMismatchException
-    // thrown by menu
-    public void menuHelper() {
-        while (true) {
-            try {
-                menu();
-                break;
-            } catch (InputMismatchException e) {
-                printm("Please enter a valid integer.");
-                continue;
-            }
+        try {
+            in = new Scanner(System.in);
+            println();
+            printm("Please select one of the following by entering an integer: ");
+            printm("1. Playing the game");
+            printm("2. Check music library");
+            printm("3. Check your song list");
+            printm("4. Check your favorite song list");
+            printm("5. Quit the program");
+            printm("6. Reload your saved lists");
+            int input = in.nextInt();
+            checkValidInput(input, 1, 6);
+            evaluateInputForMenu(input);
+        } catch (InputMismatchException e) {
+            printm("Invalid input. Please try again.");
+            menu();
         }
     }
 
@@ -113,7 +103,7 @@ public class MusicRhythmGame {
             songList();
         } else if (input == 4) {
             favoriteList();
-        } else if (input == 5){
+        } else if (input == 5) {
             quit();
         } else {
             reloadHelper();
@@ -232,9 +222,7 @@ public class MusicRhythmGame {
             printm("3. Save favorite song list");
             printm("4. Finsh saving.");
             int input = in.nextInt();
-            if (input < 1 || input > 4) {
-                throw new InputMismatchException();
-            }
+            checkValidInput(input, 1, 4);
             evaluateInputForSave(input);
         } catch (InputMismatchException e) {
             println();
@@ -333,9 +321,7 @@ public class MusicRhythmGame {
             printm("3. Reloading your favorite song list");
             printm("4. Return to the menu");
             int input = in.nextInt();
-            if (input < 1 || input > 4) {
-                throw new InputMismatchException();
-            }
+            checkValidInput(input, 1, 4);
             evaluateInputForReload(input);
         } catch (InputMismatchException e) {
             printm("Invalid input. Please try again");
@@ -352,7 +338,7 @@ public class MusicRhythmGame {
         } else if (input == 3) {
             reloadFavoriteSongList();
         } else {
-            menuHelper();
+            menu();
         }
     }
 
@@ -409,23 +395,22 @@ public class MusicRhythmGame {
     // MODIFIES: this
     // EFFECTS: show the music library panel and ask for input from user.
     public void musicLibrary() {
-        while (true) {
-            try {
-                in = new Scanner(System.in);
-                println();
-                printm("Below are currently available songs: ");
-                printSongInfo(getMusicLibrary());
-                printm("Please select one of the following by typing a valid integer:");
-                printm("1. Add song to my song list.");
-                printm("2. Add new song to the music library.");
-                printm("3. Return to the menu.");
-                int input = in.nextInt();
-                evaluateInputForMusicLibrary(input);
-            } catch (InputMismatchException e) {
-                println();
-                printm("Invalid input, please try again");
-                continue;
-            }
+        try {
+            in = new Scanner(System.in);
+            println();
+            printm("Below are currently available songs: ");
+            printSongInfo(getMusicLibrary());
+            printm("Please select one of the following by typing a valid integer:");
+            printm("1. Add song to my song list.");
+            printm("2. Add new song to the music library.");
+            printm("3. Return to the menu.");
+            int input = in.nextInt();
+            checkValidInput(input, 1, 3);
+            evaluateInputForMusicLibrary(input);
+        } catch (InputMismatchException e) {
+            println();
+            printm("Invalid input, please try again");
+            musicLibrary();
         }
     }
 
@@ -451,11 +436,11 @@ public class MusicRhythmGame {
         if (mySongList.addSong(mySong)) {
             println();
             printm(mySong.getTitle() + " is added to you song list!");
-            getMusicLibrary();
+            musicLibrary();
         } else {
             println();
             printm("The song is already in you song list.");
-            getMusicLibrary();
+            musicLibrary();
         }
     }
 
@@ -529,37 +514,26 @@ public class MusicRhythmGame {
         }
     }
 
-    // EFFECTS: invoke the song list panel and hanle the potential
-    // InputMismatchException thrown by song list panel.
-    public void songListHelper() {
-        while (true) {
-            try {
-                songList();
-                break;
-            } catch (InputMismatchException e) {
-                printm("Please enter a valid integer.");
-                continue;
-            }
-        }
-    }
-
     // EFFECTS: show the song list panel. If the user enters a valid input, invoke
     // the evaluateInputForSongList() method. Otherwise, throw new
     // InputMismatchException()
     public void songList() {
-        println();
-        printm("Your song list has: ");
-        println();
-        printSongInfo(mySongList);
-        printm("Please select one of the following by typing a valid integer");
-        printm("1. Add song to your favorite list");
-        printm("2. Remove song from your song list");
-        printm("3. Return to the menu");
-        int input = in.nextInt();
-        if (input < 1 || input > 3) {
-            throw new InputMismatchException();
+        try {
+            println();
+            printm("Your song list has: ");
+            println();
+            printSongInfo(mySongList);
+            printm("Please select one of the following by typing a valid integer");
+            printm("1. Add song to your favorite list");
+            printm("2. Remove song from your song list");
+            printm("3. Return to the menu");
+            int input = in.nextInt();
+            checkValidInput(input, 1, 3);
+            evaluateInputForSongList(input);
+        } catch (InputMismatchException e) {
+            printm("Please enter a valid integer.");
+            songList();
         }
-        evaluateInputForSongList(input);
     }
 
     // EFFECTS: evaluate the input from user for the song list panel. If the input
@@ -603,20 +577,6 @@ public class MusicRhythmGame {
         }
     }
 
-    // EFFECTS: a helper method that invokes favorite list panel and handle the
-    // potential InputMismatchException thrown by it.
-    public void favoriteSongListHelper(String title) {
-        while (true) {
-            try {
-                favoriteList();
-                break;
-            } catch (InputMismatchException e) {
-                printm("Please enter a valid integer.");
-                continue;
-            }
-        }
-    }
-
     // EFFECTS: add song to my favorite song list and print a successful message.
     // Otherwise, determines if the song is already exists, or the song is not
     // favorite, and thrown the corresponding exception.
@@ -646,17 +606,20 @@ public class MusicRhythmGame {
 
     // EFFECTS: show my favorite list panel
     public void favoriteList() throws InputMismatchException {
-        println();
-        printm("Your favorite song list has: ");
-        printSongInfo(myFavoriteList);
-        printm("Please select one of the following by typing a valid integer: ");
-        printm("1. Remove an existing song from your favorite list by typing the title");
-        printm("2. Return to the menu");
-        int input = in.nextInt();
-        if (input < 1 || input > 2) {
-            throw new InputMismatchException();
+        try {
+            println();
+            printm("Your favorite song list has: ");
+            printSongInfo(myFavoriteList);
+            printm("Please select one of the following by typing a valid integer: ");
+            printm("1. Remove an existing song from your favorite list by typing the title");
+            printm("2. Return to the menu");
+            int input = in.nextInt();
+            checkValidInput(input, 1, 2);
+            evaluateInputForFavoriteList(input);
+        } catch (InputMismatchException e) {
+            printm("Invalid input. Please try again.");
+            favoriteList();
         }
-        evaluateInputForFavoriteList(input);
     }
 
     // EFFECTS: evaluate input from user for the favorite list panel. If the input
