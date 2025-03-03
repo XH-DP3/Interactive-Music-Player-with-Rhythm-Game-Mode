@@ -64,7 +64,11 @@ public class JsonReader {
         String author = jsonObject.getString("Author: ");
         String genre = jsonObject.getString("Genre: ");
         int duration = jsonObject.getInt("Duration: ");
+        int record = jsonObject.getInt("Record: ");
+        int playTimes = jsonObject.getInt("Playing times: ");
         Song mySong = new Song(title, author, genre, duration);
+        mySong.updateRecord(record);
+        mySong.updatePlayingTimes(playTimes);
         mySongList.addSong(mySong);
     }
 }

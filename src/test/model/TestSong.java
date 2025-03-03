@@ -110,4 +110,23 @@ public class TestSong {
         mySong.markedAsFavorite();
         assertTrue(mySong.isFavorite());
     }
+
+    @Test
+    public void testPointsRelatedMethods() {
+        assertEquals(0, mySong.getTotalPoints());
+        mySong.updateTotalPoints(200);
+        assertEquals(200, mySong.getTotalPoints());
+        mySong.setFinish(true);
+        assertTrue(mySong.isFinished());
+        mySong.updateRecord(200);
+        assertEquals(200, mySong.getRecord());
+        mySong.resetTotalPoints();
+        assertEquals(0, mySong.getTotalPoints());
+    }
+
+    @Test
+    public void testUpdateTotalPoints() {
+        mySong.updateTotalPoints(-100);
+        assertEquals(0, mySong.getTotalPoints());
+    }
 }

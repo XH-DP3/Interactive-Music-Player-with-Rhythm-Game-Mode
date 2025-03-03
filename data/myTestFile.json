@@ -1,11 +1,15 @@
 {"Your song list: ": [
     {
+        "Record: ": 0,
+        "Playing times: ": 0,
         "Title: ": "Payphone",
         "Duration: ": 231,
         "Author: ": "Maroon 5",
         "Genre: ": "Pop"
     },
     {
+        "Record: ": 0,
+        "Playing times: ": 0,
         "Title: ": "Everybody Hurts",
         "Duration: ": 221,
         "Author: ": "Avril Lavigne",

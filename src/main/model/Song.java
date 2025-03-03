@@ -16,6 +16,10 @@ public class Song implements Writable {
     private List<String> lyrics;
     private boolean isPlaying;
     private boolean isFavorite;
+    private int record;
+    private int totalPoints;
+    private int playingTimes;
+    private boolean finish;
 
     // REQUIRES: duration > 0
     // MODIFIES: this
@@ -86,6 +90,7 @@ public class Song implements Writable {
 
     // EFFECTS: play this song
     public void playSong() {
+        playingTimes++;
         isPlaying = true;
     }
 
@@ -109,6 +114,58 @@ public class Song implements Writable {
         return isFavorite;
     }
 
+    // EFFECTS: return the points that the user received of this song
+    public int getTotalPoints() {
+        return totalPoints;
+    }
+
+    // EFFECTS: update the the total points that the user received
+    public void updateTotalPoints(int points) {
+        int i = getTotalPoints();
+        if ((i += points) <= 0) {
+            totalPoints = 0;
+        } else {
+            totalPoints += points;
+        }
+    }
+
+    // EFFECTS: reset total points
+    public void resetTotalPoints() {
+        totalPoints = 0;
+    }
+
+    // EFFECTS: return user's record (i.e., the highest point that the user used to
+    // get)
+    public int getRecord() {
+        return record;
+    }
+
+    // EFFECTS: updates the user's record.
+    public void updateRecord(int record) {
+        this.record = record;
+    }
+
+    // EFFECTS: return true if the song is finished (totalPoints >= 1000)
+    public boolean isFinished() {
+        return finish;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: set finish status
+    public void setFinish(boolean finish) {
+        this.finish = finish;
+    }
+
+    // EFFECTS: return the playing times of this song
+    public int getPlayingTimes() {
+        return playingTimes;
+    }
+
+    // EFFECTS: updating the playing times of the song
+    public void updatePlayingTimes(int playingTimes) {
+        this.playingTimes = playingTimes;
+    }
+
     // EFFECTS: return this song as a json object
     @Override
     public JSONObject toJson() {
@@ -117,6 +174,8 @@ public class Song implements Writable {
         json.put("Author: ", getAuthor());
         json.put("Genre: ", getGenre());
         json.put("Duration: ", getDuration());
+        json.put("Record: ", getRecord());
+        json.put("Playing times: ", getPlayingTimes());
         return json;
     }
 }

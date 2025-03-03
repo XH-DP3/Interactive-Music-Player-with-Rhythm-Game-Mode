@@ -23,6 +23,7 @@ public class MusicRhythmGame {
     private SongList mySongList;
     private SongList myFavoriteList;
     private Buttons buttons;
+    private Song currentPlayingSong;
 
     // MODIFIES: this
     // EFFECTS: Intialize the fields and invoke the menu
@@ -48,8 +49,20 @@ public class MusicRhythmGame {
     }
 
     // EFFECTS: return the total points the player got
-    public int getTotalPoint() {
-        return buttons.getTotalPressedPoints();
+    public int getTotalPoints() {
+        return getCurrentPlayingSong().getTotalPoints();
+    }
+
+    // EFFECTS: return the song object that the user is playing
+    public Song getCurrentPlayingSong() {
+        return currentPlayingSong;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: set song as the current playing song
+    public void setCurrentPlayingSong(Song song) {
+        currentPlayingSong = song;
+        currentPlayingSong.playSong();
     }
 
     // MODIFIES: this
@@ -136,8 +149,8 @@ public class MusicRhythmGame {
             menu();
         } else {
             in = new Scanner(System.in);
-            printm("Below are all songs in the music library: \n");
-            printSongInfo(getMusicLibrary());
+            printm("Below are all songs in your song list: \n");
+            printSongInfo(getSongList());
             printm("\nPlease enter the title of the song that you want to play: \n");
             String msg = in.nextLine();
             Song s = getSongList().findSongByTitle(msg);
@@ -155,10 +168,9 @@ public class MusicRhythmGame {
     // points the user received. Otherwise, print an error message.
     public void start(Song mySong) {
         printm("\nGame is starting.");
+        setCurrentPlayingSong(mySong);
         printm("Playing " + mySong.getTitle());
-        mySong.playSong();
-        boolean isOver = false;
-        while (!isOver) {
+        for (int i = 0; i < 10; i++) {
             int random = (int) (Math.random() * 8);
             generatingButtons(random);
             printm("\n(Type Q to quit the game)\n");
@@ -166,14 +178,17 @@ public class MusicRhythmGame {
             printm("\nPress keys: " + Arrays.toString(buttons.getFixedButtons()));
             String msg = in.nextLine();
             if (buttons.checkKeyPress(msg)) {
-                printm("\nGood job! You got " + getTotalPoint() + "\n");
+                mySong.updateTotalPoints(100);
+                printm("\nGood job! You have got " + getTotalPoints() + " points\n");
             } else if (msg.equals("Q")) {
-                isOver = true;
                 end();
             } else {
+                mySong.updateTotalPoints(-50);
                 printm("\nWrong key press!\n");
+                printm("\nYou now have " + getTotalPoints() + " points\n");
             }
         }
+        end();
     }
 
     // EFFECTS: generating the next falling buttons that the user has to press
@@ -200,7 +215,13 @@ public class MusicRhythmGame {
     // EFFECTS: finish the game and show the total point that the user received.
     // Then return to the menu
     public void end() {
-        printm("\nGame ends. You got " + getTotalPoint() + " points.");
+        getCurrentPlayingSong().setFinish(true);
+        if (getTotalPoints() > getCurrentPlayingSong().getRecord()) {
+            getCurrentPlayingSong().updateRecord(getTotalPoints());
+        }
+        printm("\nGame ends. You got " + getTotalPoints() + " points for this time.");
+        printm("\nYour record is " + getCurrentPlayingSong().getRecord());
+        getCurrentPlayingSong().resetTotalPoints();
         menu();
     }
 
@@ -461,7 +482,7 @@ public class MusicRhythmGame {
         try {
             in = new Scanner(System.in);
             printm("\nBelow are currently available songs: \n");
-            printSongInfo(getMusicLibrary());
+            printSongInfoForMusicLibrary();
             printm("Please select one of the following by typing a valid integer:");
             printm("1. Add song to my song list.");
             printm("2. Add new song to the music library.");
@@ -698,6 +719,22 @@ public class MusicRhythmGame {
             menu();
         } else {
             for (Song s : list.getSongs()) {
+                printm("Song Title: " + s.getTitle());
+                printm("    Author: " + s.getAuthor());
+                printm("    Genre: " + s.getGenre());
+                printm("    Duration: " + s.getDuration());
+                printm("    Record: " + s.getRecord());
+                printm("    Playing times: " + s.getPlayingTimes() + "\n");
+            }
+        }
+    }
+
+    public void printSongInfoForMusicLibrary() {
+        if (getMusicLibrary().getSize() == 0) {
+            printm("\nNo songs in this list!");
+            menu();
+        } else {
+            for (Song s : getMusicLibrary().getSongs()) {
                 printm("Song Title: " + s.getTitle());
                 printm("    Author: " + s.getAuthor());
                 printm("    Genre: " + s.getGenre());

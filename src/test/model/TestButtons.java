@@ -19,7 +19,6 @@ public class TestButtons {
 
     @Test
     public void testConstructor() {
-        assertEquals(0, buttons.getSinglePressedPoints());
         assertEquals(8, buttons.getFixedButtons().length);
         String[] actualKeys = buttons.getFixedButtons();
         assertEquals("A", actualKeys[0]);
@@ -37,7 +36,6 @@ public class TestButtons {
         buttons.setNextKeyPress("A");
         assertEquals("A", buttons.getNextFallingButton());
         assertFalse(buttons.checkKeyPress("Q"));
-        assertEquals(0, buttons.getSinglePressedPoints());
     }
 
     @Test
@@ -45,7 +43,6 @@ public class TestButtons {
         buttons.setNextKeyPress("A");
         assertEquals("A", buttons.getNextFallingButton());
         assertTrue(buttons.checkKeyPress("A"));
-        assertEquals(100, buttons.getSinglePressedPoints());
     }
 
     @Test
@@ -59,6 +56,5 @@ public class TestButtons {
         buttons.setNextKeyPress("D");
         assertEquals("D", buttons.getNextFallingButton());
         assertFalse(buttons.checkKeyPress("K"));
-        assertEquals(200, buttons.getTotalPressedPoints());
     }
 }
