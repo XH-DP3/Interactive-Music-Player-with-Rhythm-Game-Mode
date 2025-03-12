@@ -1,7 +1,11 @@
 package ui;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 import model.Buttons;
 import model.Song;
@@ -9,15 +13,17 @@ import model.SongList;
 
 // Represent the game part
 public class RhythmGame {
-    private SongListPanel songListPanel = new SongListPanel();
+    private SongListPanel songListPanel;
     private Scanner in;
-    private Buttons buttons = new Buttons();
+    private Buttons buttons;
     private MainMenu mainMenu;
+    private MusicPlayer player;
 
     // EFFECTS: construct a RhythmGame with the given mainMenu and songListPanel
     public RhythmGame(MainMenu mainMenu, SongListPanel songListPanel) {
         this.songListPanel = songListPanel;
         this.mainMenu = mainMenu;
+        buttons = new Buttons();
     }
 
     // EFFECTS: a helper method that will print message.
@@ -29,6 +35,12 @@ public class RhythmGame {
     // list
     private SongList getSongList() {
         return songListPanel.getSongList();
+    }
+
+    // A helper method that will call getAvailableList() in SongListPanel and return the
+    // list
+    private SongList getAvailableList() {
+        return songListPanel.getAvailableList();
     }
 
     // A helper method that will call printSongInfo in SongListPanel and print list.
@@ -66,8 +78,8 @@ public class RhythmGame {
             menu();
         } else {
             in = new Scanner(System.in);
-            printm("Below are all songs in your song list: \n");
-            printSongInfo(getSongList());
+            printm("Below are all available songs: \n");
+            printSongInfo(getAvailableList());
             printm("\nPlease enter the title of the song that you want to play: \n");
             String msg = in.nextLine();
             Song s = getSongList().findSongByTitle(msg);
@@ -80,20 +92,23 @@ public class RhythmGame {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: starts the game and evaluate if the key press from user is correct.
     // If the key press is correct, print an appropriate message and show the total
     // points the user received. Otherwise, print an error message.
     private void start(Song mySong) {
+        in = new Scanner(System.in);
         printm("\nGame is starting.");
+        playSong(mySong);
         setCurrentPlayingSong(mySong);
-        printm("Playing " + mySong.getTitle());
-        for (int i = 0; i < 10; i++) {
+        while (true) {
             int random = (int) (Math.random() * 8);
             generatingButtons(random);
             printm("\n(Type Q to quit the game)\n");
             printm("\nThe next falling button is: " + buttons.getNextFallingButton());
             printm("\nPress keys: " + Arrays.toString(buttons.getFixedButtons()));
             String msg = in.nextLine();
+            checkSongEnd();
             if (buttons.checkKeyPress(msg)) {
                 mySong.updateTotalPoints(100);
                 printm("\nGood job! You have got " + getTotalPoints() + " points\n");
@@ -105,7 +120,30 @@ public class RhythmGame {
                 printm("\nYou now have " + getTotalPoints() + " points\n");
             }
         }
-        end();
+    }
+
+    private void checkSongEnd() {
+        if (player.isOver()) {
+            end();
+        }
+    }
+
+    // EFFECTS: a helper method that will help to play the song
+    public void playSong(Song mySong) {
+        try {
+            player = new MusicPlayer(mySong, mainMenu, true);
+            printm("Playing " + mySong.getTitle());
+        } catch (LineUnavailableException e) {
+            printm(e.getMessage());
+            menu();
+            e.printStackTrace();
+        } catch (UnsupportedAudioFileException e) {
+            printm(e.getMessage());
+            menu();
+        } catch (IOException e) {
+            printm(e.getMessage());
+            menu();
+        }
     }
 
     // EFFECTS: generating the next falling buttons that the user has to press
@@ -132,6 +170,8 @@ public class RhythmGame {
     // EFFECTS: finish the game and show the total point that the user received.
     // Then return to the menu
     private void end() {
+        player.close();
+        printm("\nSong ends.\n");
         getCurrentPlayingSong().setFinish(true);
         if (getTotalPoints() > getCurrentPlayingSong().getRecord()) {
             getCurrentPlayingSong().updateRecord(getTotalPoints());

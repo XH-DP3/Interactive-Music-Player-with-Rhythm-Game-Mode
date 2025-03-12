@@ -38,6 +38,30 @@ public class SongListPanel {
         mySongList = new SongList();
         myFavoriteList = new FavoriteSongList();
         availableList = new SongList();
+        setMelodyFiles();
+        addDefaultSongs();
+    }
+
+    // constructs the song list panel with several "built in" songs.
+    public SongListPanel() {
+        musicLibrary = new SongList();
+        mySongList = new SongList();
+        myFavoriteList = new FavoriteSongList();
+        availableList = new SongList();
+        addDefaultSongs();
+    }
+
+    // EFFECTS: a helper method that set melody files path of the songs
+    private void setMelodyFiles() {
+        s1.setMelodyFilepath(path1);
+        s2.setMelodyFilepath(path2);
+        s3.setMelodyFilepath(path3);
+        s4.setMelodyFilepath(path4);
+        s5.setMelodyFilepath(path5);
+    }
+
+    // EFFECTS: a helper method taht add songs to some lists 
+    public void addDefaultSongs() {
         musicLibrary.addSong(s1);
         musicLibrary.addSong(s2);
         musicLibrary.addSong(s3);
@@ -48,23 +72,6 @@ public class SongListPanel {
         availableList.addSong(s3);
         availableList.addSong(s4);
         availableList.addSong(s5);
-    }
-
-    // constructs the song list panel with several "built in" songs.
-    public SongListPanel() {
-        musicLibrary = new SongList();
-        mySongList = new SongList();
-        myFavoriteList = new FavoriteSongList();
-        Song s1 = new Song("Payphone", "Maroon 5", "Pop", 231);
-        Song s2 = new Song("Everybody Hurts", "Avril Lavigne", "Pop", 221);
-        Song s3 = new Song("Innocence", "Avril Lavigne", "Pop", 233);
-        Song s4 = new Song("Whataya Want from Me", "Adam Lambert", "Pop", 227);
-        Song s5 = new Song("Like I Do", "J.Tajor", "R&B", 149);
-        musicLibrary.addSong(s1);
-        musicLibrary.addSong(s2);
-        musicLibrary.addSong(s3);
-        musicLibrary.addSong(s4);
-        musicLibrary.addSong(s5);
     }
 
     // EFFECTS: a helper method that will invoke the menu
@@ -87,12 +94,17 @@ public class SongListPanel {
         return myFavoriteList;
     }
 
-    // EFFECTS: return the total points the player got
+    // EFFECTS: return the available list.
+    public SongList getAvailableList() {
+        return availableList;
+    }
+
+    // EFFECTS: return the total points the player got.
     public int getTotalPoints() {
         return getCurrentPlayingSong().getTotalPoints();
     }
 
-    // EFFECTS: return the song object that the user is playing
+    // EFFECTS: return the song object that the user is playing.
     public Song getCurrentPlayingSong() {
         return currentPlayingSong;
     }
@@ -194,7 +206,7 @@ public class SongListPanel {
                 printm("The song is not found");
                 menu();
             }
-            findAvailableSong(s);
+            new MusicPlayer(s, mainMenu, false);
         } catch (LineUnavailableException e) {
             printm(e.getMessage());
             menu();
@@ -204,22 +216,6 @@ public class SongListPanel {
         } catch (IOException e) {
             printm(e.getMessage());
             menu();
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: create a music player object and will play the corresponding song
-    private void findAvailableSong(Song s) throws LineUnavailableException, UnsupportedAudioFileException, IOException {
-        if (s.equals(s1)) {
-            new MusicPlayer(path1, mainMenu, this);
-        } else if (s.equals(s2)) {
-            new MusicPlayer(path2, mainMenu, this);
-        } else if (s.equals(s3)) {
-            new MusicPlayer(path3, mainMenu, this);
-        } else if (s.equals(s4)) {
-            new MusicPlayer(path4, mainMenu, this);
-        } else if (s.equals(s5)) {
-            new MusicPlayer(path5, mainMenu, this);
         }
     }
 

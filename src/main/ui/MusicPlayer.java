@@ -6,6 +6,8 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import model.Song;
+
 import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -14,30 +16,33 @@ import java.util.Scanner;
 public class MusicPlayer {
     private Clip clip;
     private boolean isPlaying;
-    private boolean isOver;
-    private String filePath;
+    private Song mySong;
     private MainMenu mainMenu;
-    private SongListPanel songListPanel;
 
     // MODIFIES: this
-    // EFFECTS: construct a music player object with a filepath
-    public MusicPlayer(String filePath, MainMenu mainMenu, SongListPanel songListPanel)
+    // EFFECTS: construct a music player object and invoke playHelper()
+    public MusicPlayer(Song mySong, MainMenu mainMenu, boolean playForGame)
             throws LineUnavailableException, UnsupportedAudioFileException, IOException {
         this.mainMenu = mainMenu;
-        this.filePath = filePath;
-        this.songListPanel = songListPanel;
-        playHelper();
+        this.mySong = mySong;
+        if (playForGame) {
+            playForGame();
+        } else {
+            playHelper();
+        }
     }
+
 
     // EFFECTS: A helper method that print message
     public void printm(String message) {
         System.out.println(message);
     }
 
-    // EFFECTS: A method that will ask user for operations including play, pause, reset, and quit.
+    // EFFECTS: A method that will ask user for operations including play, pause,
+    // reset, and quit.
     public void playHelper() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
         try (Scanner in = new Scanner(System.in);
-                AudioInputStream stream = AudioSystem.getAudioInputStream(new File(filePath))) {
+                AudioInputStream stream = AudioSystem.getAudioInputStream(new File(mySong.getMeolodyFilePath()))) {
             int input = -1;
             clip = AudioSystem.getClip();
             clip.open(stream);
@@ -57,7 +62,8 @@ public class MusicPlayer {
         }
     }
 
-    // EFFECTS: a method that will evaluate the input from user regarding the operations of playing the song
+    // EFFECTS: a method that will evaluate the input from user regarding the
+    // operations of playing the song
     public void evaluateInputForPlay(int input) throws LineUnavailableException, IOException {
         if (input == 1) {
             play();
@@ -67,6 +73,18 @@ public class MusicPlayer {
             reset();
         } else {
             close();
+        }
+    }
+
+    // EFFECTS: play the music when the game is starting
+    public void playForGame() throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+        try (AudioInputStream stream = AudioSystem.getAudioInputStream(new File(mySong.getMeolodyFilePath()))) {
+            clip = AudioSystem.getClip();
+            clip.open(stream);
+            play();
+        } catch (InputMismatchException e) {
+            printm("\nInvalid input. Please try again.");
+            playHelper();
         }
     }
 
@@ -89,12 +107,12 @@ public class MusicPlayer {
     // EFFECTS: close the clip
     public void close() {
         clip.close();
-        songListPanel.playHepler();
+        mainMenu.menu();
     }
 
     // EFFECTS: return true if the music is over
     public boolean isOver() {
-        return isOver;
+        return clip.getFramePosition() >= clip.getFrameLength();
     }
 
     // EFFECTS: return true if the music is playing

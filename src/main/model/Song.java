@@ -20,6 +20,7 @@ public class Song implements Writable {
     private int totalPoints;
     private int playingTimes;
     private boolean finish;
+    private String melodyFilepath;
 
     // REQUIRES: duration > 0
     // MODIFIES: this
@@ -164,6 +165,16 @@ public class Song implements Writable {
     // EFFECTS: updating the playing times of the song
     public void updatePlayingTimes(int playingTimes) {
         this.playingTimes = playingTimes;
+    }
+
+    // EFFECTS: set the melody filepath of this song
+    public void setMelodyFilepath(String filepath) {
+        melodyFilepath = filepath;
+    }
+
+    // EFFECTS: return the melodyFilePath
+    public String getMeolodyFilePath() {
+        return melodyFilepath;
     }
 
     // EFFECTS: return this song as a json object
