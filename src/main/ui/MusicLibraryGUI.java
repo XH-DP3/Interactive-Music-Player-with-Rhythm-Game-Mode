@@ -1,8 +1,10 @@
 package ui;
 
 import java.awt.GridLayout;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,16 +19,20 @@ public class MusicLibraryGUI extends JFrame{
     private JButton add;
     private JButton delete;
     private JButton mainMenu;
+    private JButton previousPage;
     private SongList musicLibrary;
     private Song s1 = new Song("Payphone", "Maroon 5", "Pop", 231);
     private Song s2 = new Song("Everybody Hurts", "Avril Lavigne", "Pop", 221);
     private Song s3 = new Song("Innocence", "Avril Lavigne", "Pop", 233);
     private Song s4 = new Song("Whataya Want from Me", "Adam Lambert", "Pop", 227);
     private Song s5 = new Song("Like I Do", "J.Tajor", "R&B", 149);
+    private MainMenuGUI mainMenuGUI;
+    private ArrayList<JButton> songButtons = new ArrayList<>();
 
     // MODIFIES: this
     // EFFECTS: consturct the music library with default songs
-    public MusicLibraryGUI() {
+    public MusicLibraryGUI(MainMenuGUI mainMenuGUI) {
+        this.mainMenuGUI = mainMenuGUI;
         musicLibrary = new SongList();
         musicLibrary.addSong(s1);
         musicLibrary.addSong(s2);
@@ -47,6 +53,7 @@ public class MusicLibraryGUI extends JFrame{
     // EFFECTS: generating JButton for song and return the JButton
     private JButton generateJButtonForSong(Song mySong) {
         JButton button = new JButton(displaySong(mySong));
+        songButtons.add(button);
         return button;
     }
 
@@ -76,6 +83,12 @@ public class MusicLibraryGUI extends JFrame{
                 addHelper();
             }
         });
+        mainMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainMenuGUI.mainMenu();
+            }
+        });
     }
 
     // EFFECTS: display the available songs in the music library
@@ -84,9 +97,20 @@ public class MusicLibraryGUI extends JFrame{
         for (Song s : musicLibrary.getSongs()) {
             frame.add(generateJButtonForSong(s));
         }
-        JButton previousPage = new JButton("Return to the previous page");
+        previousPage = new JButton("Return to the previous page");
         frame.add(previousPage);
         layout(frame, musicLibrary.getSongs().size()+1, 1);
+        addActionListenersForAdd();
+    }
+
+    // EFFECTS: add action listner for each JButton object of adding.
+    private void addActionListenersForAdd() {
+        previousPage.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                musicLibrary();
+            }
+        });
     }
 }
 
