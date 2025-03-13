@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.WindowConstants;
 
 // Represents the main menu with options that the user can select
@@ -58,7 +59,8 @@ public class MainMenuGUI extends JFrame{
     private void addActionListeners() {
         musicLibrary.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {    
+            public void actionPerformed(ActionEvent e) { 
+                frame.dispose(); 
                 handleMusicLibraryClicked();
             }
         });
@@ -70,7 +72,8 @@ public class MainMenuGUI extends JFrame{
         });
         favoriteList.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {    
+            public void actionPerformed(ActionEvent e) { 
+                frame.dispose();   
                 handleFavoriteListClicked();
             }
         });

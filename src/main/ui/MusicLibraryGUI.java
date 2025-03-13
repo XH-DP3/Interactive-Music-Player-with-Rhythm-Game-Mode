@@ -1,16 +1,18 @@
 package ui;
 
 import java.awt.GridLayout;
-import java.awt.List;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import model.FavoriteSongList;
 import model.Song;
 import model.SongList;
 
@@ -28,6 +30,7 @@ public class MusicLibraryGUI extends JFrame{
     private Song s5 = new Song("Like I Do", "J.Tajor", "R&B", 149);
     private MainMenuGUI mainMenuGUI;
     private ArrayList<JButton> songButtons = new ArrayList<>();
+    private JFrame frame;
 
     // MODIFIES: this
     // EFFECTS: consturct the music library with default songs
@@ -45,7 +48,7 @@ public class MusicLibraryGUI extends JFrame{
     private void layout(JFrame frame, int row, int col) {
         frame.setLayout(new GridLayout(row, col));
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setSize(500, 200);
+        frame.setSize(1000, 700);
         frame.setLocationRelativeTo(null);
 	    frame.setVisible(true);
     }
@@ -59,19 +62,41 @@ public class MusicLibraryGUI extends JFrame{
 
     // EFFECTS: return a string representation to display the song  
     private String displaySong(Song mySong) {
-        return mySong.getTitle() + ", " + mySong.getAuthor() + ", " + mySong.getGenre() + ", " + mySong.getDuration();
+        return "Title: " + mySong.getTitle() + 
+                "   Author: " + mySong.getAuthor() + 
+                "   Genre: " + mySong.getGenre() +
+                "   Duration: " + mySong.getDuration();
+    }
+
+    // EFFECTS: print the information of the song toghet
+    private void printSongInfo(Song mySong, String imagePath) {
+        JPanel panel = new JPanel();
+        JLabel songLabel = new JLabel(displaySong(mySong));
+        ImageIcon originalIcon = new ImageIcon(imagePath);
+        Image resizedImage = originalIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(resizedImage);
+        JLabel imageLabel = new JLabel(resizedIcon);
+        panel.setLayout(new GridLayout(1,2));
+        panel.add(songLabel);
+        panel.add(imageLabel);
+        frame.add(panel);
     }
 
     // EFFECTS: invoke the music library page
     public void musicLibrary() {
-        JFrame frame = new JFrame("Music Library");
+        frame = new JFrame("Music Library");
+        printSongInfo(s1, "data/Maroon_5_Payphone_cover.png");
+        printSongInfo(s2, "data/Cover_Everybody Hurts.png");
+        printSongInfo(s3, "data/Cover_Innocence.jpeg");
+        printSongInfo(s4, "data/Cover_Whataya Want from Me.jpeg");
+        printSongInfo(s5, "data/Cover_Like I Do.jpg");
         add = new JButton("Add song to your song list");
         delete = new JButton("Delete song from your song list");
         mainMenu = new JButton("Return to the main menu");
         frame.add(add);
         frame.add(delete);
         frame.add(mainMenu);
-        layout(frame, 3, 1);
+        layout(frame, 10, 1);
         addActionListeners();
     }
 
@@ -80,12 +105,14 @@ public class MusicLibraryGUI extends JFrame{
         add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 addHelper();
             }
         });
         mainMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 mainMenuGUI.mainMenu();
             }
         });
@@ -93,7 +120,7 @@ public class MusicLibraryGUI extends JFrame{
 
     // EFFECTS: display the available songs in the music library
     private void addHelper() {
-        JFrame frame = new JFrame("Songs in Music Library");
+        frame = new JFrame("Songs in Music Library");
         for (Song s : musicLibrary.getSongs()) {
             frame.add(generateJButtonForSong(s));
         }
@@ -108,6 +135,7 @@ public class MusicLibraryGUI extends JFrame{
         previousPage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                frame.dispose();
                 musicLibrary();
             }
         });
