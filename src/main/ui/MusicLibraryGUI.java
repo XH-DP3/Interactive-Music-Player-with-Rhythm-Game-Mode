@@ -102,12 +102,10 @@ public class MusicLibraryGUI extends JFrame {
             printSongInfo(mySong);
         }
         add = new JButton("Add song to your song list");
-        delete = new JButton("Delete song from your song list");
         mainMenu = new JButton("Return to the main menu");
         frame.add(add);
-        frame.add(delete);
         frame.add(mainMenu);
-        layout(frame, 10, 1);
+        layout(frame, 9, 1);
         addActionListeners();
     }
 
@@ -137,6 +135,7 @@ public class MusicLibraryGUI extends JFrame {
         frame = new JFrame("Songs in Music Library");
         generateJButtonForSongs(musicLibrary);
         addActionListenersForAdd();
+        addActionListeners();
     }
 
     // EFFECTS: generating JButton for song and return the JButton
@@ -150,8 +149,10 @@ public class MusicLibraryGUI extends JFrame {
             frame.add(button);
         }
         previousPage = new JButton("Return to the previous page");
+        mainMenu = new JButton("Return to the main menu");
         frame.add(previousPage);
-        layout(frame, musicLibrary.getSize() + 2, 1);
+        frame.add(mainMenu);
+        layout(frame, musicLibrary.getSize() + 3, 1);
     }
 
     // MODIFIES: this
