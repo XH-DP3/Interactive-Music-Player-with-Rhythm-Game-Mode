@@ -20,22 +20,14 @@ import model.SongList;
 
 // Represent music library with default built in songs
 public class MusicLibraryGUI extends JFrame {
-    private Song s1 = new Song("Payphone", "Maroon 5", "Pop", 231);
-    private Song s2 = new Song("Everybody Hurts", "Avril Lavigne", "Pop", 221);
-    private Song s3 = new Song("Innocence", "Avril Lavigne", "Pop", 233);
-    private Song s4 = new Song("Whataya Want from Me", "Adam Lambert", "Pop", 227);
-    private Song s5 = new Song("Like I Do", "J.Tajor", "R&B", 149);
     private SongList musicLibrary;
-    private JButton add;
-    private JButton delete;
-    private JButton mainMenu;
-    private JButton previousPage;
     private JFrame frame;
     private JLabel label;
     private MainMenuGUI mainMenuGUI;
     private SongListGUI songListGUI;
     private ArrayList<JButton> songButtons;
     private Map<JButton, Song> mapSongs;
+    private Map<String, JButton> buttons;
 
     // MODIFIES: this
     // EFFECTS: consturct the music library with default songs
@@ -44,12 +36,18 @@ public class MusicLibraryGUI extends JFrame {
         musicLibrary = new SongList();
         songButtons = new ArrayList<>();
         mapSongs = new HashMap<>();
+        buttons = new HashMap<>();
         this.songListGUI = songListGUI;
         addDefaultSongs();
     }
 
     // EFFECTS: add the default songs to the music library
     private void addDefaultSongs() {
+        Song s1 = new Song("Payphone", "Maroon 5", "Pop", 231);
+        Song s2 = new Song("Everybody Hurts", "Avril Lavigne", "Pop", 221);
+        Song s3 = new Song("Innocence", "Avril Lavigne", "Pop", 233);
+        Song s4 = new Song("Whataya Want from Me", "Adam Lambert", "Pop", 227);
+        Song s5 = new Song("Like I Do", "J.Tajor", "R&B", 149);
         musicLibrary.addSong(s1);
         musicLibrary.addSong(s2);
         musicLibrary.addSong(s3);
@@ -101,8 +99,10 @@ public class MusicLibraryGUI extends JFrame {
         for (Song mySong : musicLibrary.getSongs()) {
             printSongInfo(mySong);
         }
-        add = new JButton("Add song to your song list");
-        mainMenu = new JButton("Return to the main menu");
+        JButton add = new JButton("Add song to your song list");
+        JButton mainMenu = new JButton("Return to the main menu");
+        buttons.put("add", add);
+        buttons.put("mainMenu", mainMenu);
         frame.add(add);
         frame.add(mainMenu);
         layout(frame, 9, 1);
@@ -113,14 +113,14 @@ public class MusicLibraryGUI extends JFrame {
     // EFFECTS: add action listener for each JButton object and will invoke the
     // corresponding method to perform actions.
     private void addActionListeners() {
-        add.addActionListener(new ActionListener() {
+        buttons.get("add").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 addHelper();
             }
         });
-        mainMenu.addActionListener(new ActionListener() {
+        buttons.get("mainMenu").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
@@ -148,8 +148,10 @@ public class MusicLibraryGUI extends JFrame {
             songButtons.add(button);
             frame.add(button);
         }
-        previousPage = new JButton("Return to the previous page");
-        mainMenu = new JButton("Return to the main menu");
+        JButton previousPage = new JButton("Return to the previous page");
+        JButton mainMenu = new JButton("Return to the main menu");
+        buttons.put("previousPage", previousPage);
+        buttons.put("mainMenu", mainMenu);
         frame.add(previousPage);
         frame.add(mainMenu);
         layout(frame, musicLibrary.getSize() + 3, 1);
@@ -166,7 +168,7 @@ public class MusicLibraryGUI extends JFrame {
                 }
             });
         }
-        previousPage.addActionListener(new ActionListener() {
+        buttons.get("previousPage").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();

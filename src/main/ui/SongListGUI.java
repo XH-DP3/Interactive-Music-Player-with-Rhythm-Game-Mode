@@ -25,23 +25,18 @@ import model.SongList;
 public class SongListGUI {
     private SongList mySongList;
     private MainMenuGUI mainMenuGUI;
-    private MusicLibraryGUI musicLibraryGUI;
     private JFrame frame;
     private JLabel label;
-    private JButton add;
-    private JButton deletePage;
-    private JButton delete;
-    private JButton markAsFavorite;
-    private JButton previous;
-    private JButton menu;
-    private JCheckBox box;
-    private Map<JCheckBox, Song> mapSongs = new HashMap<>();
+    private JButton sort;
+    private Map<JCheckBox, Song> mapSongs;
+    private Map<String, JButton> buttons;
 
     // MODIFIES: this
     // EFFECTS: construct an empty song list with refernece to the previous page
     // (main menu and music library)
     public SongListGUI(MainMenuGUI mainMenuGUI) {
         mySongList = new SongList();
+        buttons = new HashMap<>();
         this.mainMenuGUI = mainMenuGUI;
     }
 
@@ -58,6 +53,7 @@ public class SongListGUI {
     private String displaySong(Song mySong) {
         return "Title: " + mySong.getTitle() + ", "
                 + "   Author: " + mySong.getAuthor() + ", "
+                + "   Duration: " + mySong.getDuration() + ", "
                 + "   Is Favorite: " + mySong.isFavorite();
     }
 
@@ -77,12 +73,18 @@ public class SongListGUI {
 
     // EFFECTS: create the buttons for the song list panel
     private void createButtons() {
-        add = new JButton("Add song to your favorite list");
-        deletePage = new JButton("Delete song from your song list");
-        markAsFavorite = new JButton("Mark song as favorite");
+        JButton add = new JButton("Add song to your favorite list");
+        JButton deletePage = new JButton("Delete song from your song list");
+        JButton markAsFavorite = new JButton("Mark song as favorite");
+        JButton sort = new JButton("Sort your song list");
         frame.add(add);
         frame.add(deletePage);
         frame.add(markAsFavorite);
+        frame.add(sort);
+        buttons.put("add", add);
+        buttons.put("deletePage", deletePage);
+        buttons.put("marksAsFavorite", markAsFavorite);
+        buttons.put("sort", sort);
     }
 
     // MODIFIES: this
@@ -104,38 +106,61 @@ public class SongListGUI {
             }
             createButtons();
         }
-        menu = new JButton("Return to the menu");
+        JButton menu = new JButton("Return to the menu");
         frame.add(menu);
-        layout(frame, mySongList.getSize() + 5, 1);
+        buttons.put("menu", menu);
+        layout(frame, mySongList.getSize() + 6, 1);
         addActionListeners();
+        addMoreActionListeners();
     }
 
     // MODIFIES: this
     // EFFECTS: add action listener for each JButton object and will invoke the
     // corresponding method to perform actions.
     private void addActionListeners() {
-        menu.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-                mainMenu();
-            }
-        });
-        deletePage.addActionListener(new ActionListener() {
-            @Override
+        buttons.get("deletePage").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 deleteHelper();
             }
         });
-        delete.addActionListener(new ActionListener() {
-            @Override
+        buttons.get("delete").addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
                 delete();
             }
         });
+        buttons.get("add").addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                songList();
+            }
+        });
+    }
 
+    // MODIFIES: this
+    // EFFECTS: add more action listener for each JButton object and will invoke the
+    // corresponding method to perform actions.
+    private void addMoreActionListeners() {
+        buttons.get("previous").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                songList();
+            }
+        });
+        buttons.get("menu").addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                mainMenu();
+            }
+        });
+        // sort.addActionListener(new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         sortHelper();
+        //     }
+        // });
     }
 
     // EFFECTS: return to the main menu
@@ -150,18 +175,25 @@ public class SongListGUI {
             JOptionPane.showMessageDialog(frame, "Your song list has no songs!");
             songList();
         }
-        frame = new JFrame("Select the songs you want to delete");
+        frame = new JFrame("Songs in your song list");
+        label = new JLabel("Please select the songs you want to delete");
+        frame.add(label);
+        mapSongs = new HashMap<>();
         for (Song s : mySongList.getSongs()) {
             generateCheckBox(s);
         }
-        delete = new JButton("Delete");
-        previous = new JButton("Return to the previous page");
-        menu = new JButton("Return to the main menu");
+        JButton delete = new JButton("Delete");
+        JButton previous = new JButton("Return to the previous page");
+        JButton menu = new JButton("Return to the main menu");
+        buttons.put("delete", delete);
+        buttons.put("previous", previous);
+        buttons.put("menu", menu);
         frame.add(delete);
         frame.add(previous);
         frame.add(menu);
-        layout(frame, mySongList.getSize() + 3, 1);
+        layout(frame, mySongList.getSize() + 4, 1);
         addActionListeners();
+        addMoreActionListeners();
     }
 
     // MODIFIES: this
@@ -175,6 +207,8 @@ public class SongListGUI {
         mapSongs.put(box, mySong);
     }
 
+    // MODIFIES: this
+    // EFFECTS: delete the selected song from songlist
     private void delete() {
         Set<JCheckBox> boxes = mapSongs.keySet();
         for (JCheckBox b : boxes) {
@@ -185,5 +219,16 @@ public class SongListGUI {
             frame.dispose();
             songList();
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: provide options to user of how they like the songs to be sorted
+    private void sortHelper() {
+        JButton fromLowest = new JButton("Sort the songs from the lowest duration");
+        JButton fromHighest = new JButton("Sort the songs from the highest duration");
+        frame = new JFrame("Sorting Helper");
+        frame.add(fromLowest);
+        frame.add(fromHighest);
+        addMoreActionListeners();
     }
 }
