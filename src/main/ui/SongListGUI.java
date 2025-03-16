@@ -95,6 +95,11 @@ public class SongListGUI {
         mySongList.addSong(mySong);
     }
 
+    // EFFECTS: return the songlist
+    public SongList getSongList() {
+        return mySongList;
+    }
+
     // MODIFIES: this
     // EFFECTS: invoke the song list page
     public void songList() {

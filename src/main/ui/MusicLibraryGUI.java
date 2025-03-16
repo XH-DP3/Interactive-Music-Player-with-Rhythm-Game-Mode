@@ -33,11 +33,11 @@ public class MusicLibraryGUI extends JFrame {
     // EFFECTS: consturct the music library with default songs
     public MusicLibraryGUI(MainMenuGUI mainMenuGUI, SongListGUI songListGUI) {
         this.mainMenuGUI = mainMenuGUI;
+        this.songListGUI = songListGUI;
         musicLibrary = new SongList();
         songButtons = new ArrayList<>();
         mapSongs = new HashMap<>();
         buttons = new HashMap<>();
-        this.songListGUI = songListGUI;
         addDefaultSongs();
     }
 

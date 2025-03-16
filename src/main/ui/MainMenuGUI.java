@@ -3,15 +3,24 @@ package ui;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
+
+import model.SongList;
+import persistence.JsonWriter;
 
 // Represents the main menu with options that the user can select
 public class MainMenuGUI extends JFrame {
+    private static final String MUSIC_LIBRARY_PATH = "data/musicLibrary.json";
+    private static final String SONG_LIST_PATH = "data/mySongList.json";
+    private static final String FAVORITE_LIST_PATH = "data/myFavoriteSongList.json";
     private JFrame frame;
     private SongListGUI songListGUI;
     private MusicLibraryGUI musicLibraryGUI;
@@ -20,8 +29,8 @@ public class MainMenuGUI extends JFrame {
     // MODIFIES: this
     // EFFECTS: contruct the main menu panel by invoking it
     public MainMenuGUI() {
-        musicLibraryGUI = new MusicLibraryGUI(this, songListGUI);
         songListGUI = new SongListGUI(this);
+        musicLibraryGUI = new MusicLibraryGUI(this, songListGUI);
         buttons = new HashMap<>();
         mainMenu();
     }
@@ -43,6 +52,7 @@ public class MainMenuGUI extends JFrame {
         createButtons();
         layout(frame, 5, 1);
         addListsActionListeners();
+        addPersistentActionListeners();
     }
 
     // MODIFIES: this
@@ -66,53 +76,91 @@ public class MainMenuGUI extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: add action listners for the main menu panel
+    // EFFECTS: add action listners for the lists-related operations
     private void addListsActionListeners() {
         buttons.get("musicLibrary").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                handleMusicLibraryClicked();
+                musicLibraryGUI.musicLibrary();
             }
         });
         buttons.get("songList").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                handleSongListClicked();
+                songListGUI.songList();
             }
         });
         buttons.get("favoriteList").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 frame.dispose();
-                handleFavoriteListClicked();
+                // stub
             }
         });
     }
 
-    // EFFECTS: handle the case when music library button is clicked
-    private void handleMusicLibraryClicked() {
-        musicLibraryGUI.musicLibrary();
+    // MODIFIES: this
+    // EFFECTS: adding action listeners for persistent-related operations
+    private void addPersistentActionListeners() {
+        buttons.get("quit").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose();
+                quitHelper();
+            }
+        });
     }
 
-    // EFFECTS: handle the case when song list button is clicked
-    private void handleSongListClicked() {
-        songListGUI.songList();
+    // EFFECTS: provide options to save the progress when the user click on the quit
+    // button.
+    private void quitHelper() {
+        int choice = JOptionPane.showConfirmDialog(null,
+                "Would you like to save your progress?", "Quit Options", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.NO_OPTION) {
+            System.exit(1);
+        } else {
+            saveHelper();
+        }
     }
 
-    // EFFECTS: handle the case when favorite list button is clicked
-    private void handleFavoriteListClicked() {
-        // stub
+    // EFFECTS: display the save page and provide options of objects which can be
+    // saved
+    private void saveHelper() {
+        frame = new JFrame("Save Helper");
+        JButton saveSongList = new JButton("Save your song list");
+        JButton menu = new JButton("Return to the menu");
+        buttons.put("saveSongList", saveSongList);
+        buttons.put("menu", menu);
+        frame.add(saveSongList);
+        frame.add(menu);
+        layout(frame, 2, 1);
+        addSaveActionListeners();
     }
 
-    // EFFECTS: handle the case when reload button is clicked
-    private void handleReloadClicked() {
-        // stub
+    // EFFECTS: add action listeners for saving and invoke writeToFile() method to perform saving
+    private void addSaveActionListeners() {
+        buttons.get("saveSongList").addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                writeToFile(SONG_LIST_PATH, songListGUI.getSongList());
+                JOptionPane.showMessageDialog(null, "Your song list is saved", "Message",
+                        JOptionPane.INFORMATION_MESSAGE);
+                System.exit(1);
+            }
+        });
     }
 
-    // EFFECTS: handle the case when quit button is clicked
-    private void handleQuitClicked() {
-        // stub
+    // EFFECTS: write list to filepath
+    private void writeToFile(String filePath, SongList list) {
+        JsonWriter writer = new JsonWriter(filePath);
+        try {
+            writer.open();
+            writer.write(list);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
