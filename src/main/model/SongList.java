@@ -81,6 +81,7 @@ public class SongList implements Writable {
     // EFFECT: add mySong to the end of the list and return true;
     public boolean addSong(Song mySong) {
         if (!isContained(mySong.getTitle())) {
+            EventLog.getInstance().logEvent(new Event(mySong.getTitle() +  " is added to song list."));
             return songs.add(mySong);
         }
         return false;
@@ -92,7 +93,9 @@ public class SongList implements Writable {
     // true
     public boolean deleteSong(int index) {
         if (checkValidIndex(index)) {
+            Song mySong = songs.get(index);
             songs.remove(index);
+            EventLog.getInstance().logEvent(new Event(mySong.getTitle() + " is deleted from song list."));
             return true;
         }
         return false;
@@ -133,6 +136,7 @@ public class SongList implements Writable {
                 songs.set(i, temp);
             }
         }
+        EventLog.getInstance().logEvent(new Event("Song list is sorted by the lowest duration."));
     }
 
     // REQUIRES: getSize() > 0
@@ -152,6 +156,7 @@ public class SongList implements Writable {
                 songs.set(i, temp);
             }
         }
+        EventLog.getInstance().logEvent(new Event("Song list is sorted by the highest duration."));
     }
 
     // EFFECTS: returns a JSONObject containing all songs in the song list
