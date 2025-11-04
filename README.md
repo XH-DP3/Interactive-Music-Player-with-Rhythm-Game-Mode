@@ -1,4 +1,4 @@
-# Rhythm Challenge: Press Your Keys!
+# Simple Music Player
 
 ## Feel the music, Feel the Rhythm
 
