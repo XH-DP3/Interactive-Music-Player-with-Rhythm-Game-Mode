@@ -1,15 +1,12 @@
-# Reminder: This is a term project of the course, CPSC 210 (Software Construction) of UBC.
-
 # Rhythm Challenge: Press Your Keys!
 
 ## Feel the music, Feel the Rhythm
 
-- Challenge your reaction
-- Different levels of difficulty
-- Generate game for your favorite music
+A simple music player that allows users to play and enjoy built-in songs. A lightweight and intuitive music player designed for an easy listening experience.
 
-A music rhythm game that provides several built-in music with different levels of difficulty. It also allows you to upload your downloaded music from your music library and generate games for your music! Each your key pressed is evaluated with feedback: "Perfect", "Good", and "Missed", which you will either earn or lose points.
-
+- Provides a clean interface for selecting and playing tracks.
+- Displays basic information such as song title and artist.
+- Supports pause, resume, and stop controls for smooth playback.
 
 ## User Stories
 
