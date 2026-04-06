@@ -1,4 +1,4 @@
-# Simple Music Player
+# Interactive-Music-Player-with-Rhythm-Game-Mode
 
 ## Feel the music, Feel the Rhythm
 
